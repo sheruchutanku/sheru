@@ -40,6 +40,8 @@ jobs:
       - name: Terraform Plan
         id: plan
         run: terraform plan -out tfplan
+        env:
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         continue-on-error: true
 
       - name: Terraform Plan Status

@@ -47,10 +47,11 @@ jobs:
       - name: Terraform Plan Status
         if: steps.plan.outcome == 'failure'
         run: exit 1
-
+  
       - name: Terraform Apply
         run: terraform apply -auto-approve
-       
+        env:
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}          
 
       - name: Terraform Output
         run: terraform output

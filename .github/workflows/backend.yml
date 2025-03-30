@@ -19,7 +19,7 @@ jobs:
        
       - name: Azure Login with Managed Identity (UAMI)
         run: |
-          az login --identity --username ${{ secrets.AZURE_CLIENT_ID }}
+          az login --identity --client ${{ secrets.AZURE_CLIENT_ID }}
 
       - name: Set Terraform Environment Variables
         run: |

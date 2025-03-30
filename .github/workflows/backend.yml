@@ -45,16 +45,16 @@ jobs:
         with:
           terraform_version: 1.5.7  
 
-      - name: Terraform Init
+     - name: Terraform Init
         id: init
-        run: terraform init
+        run: terraform init -backend-config="resource_group_name=back" -backend-config="storage_account_name=tt420" -backend-config="container_name=tfstate"
  
       - name: Terraform Validate
         id: validate
         run: terraform validate
        
       - name: Terraform Plan
-        id: plan
+        id: plantt420
         run: terraform plan -out=tfplan
         continue-on-error: true
 

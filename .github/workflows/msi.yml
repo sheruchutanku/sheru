@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Login via User-assigned Managed Identity
-        run: az login --identity --client-id ${{ secrets.MSI_CLIENT_ID }}
+        run: az login --identity --client-id ${{ secrets.AZURE_MSI_CLIENT_ID }}
        
 #      - name: Azure Login with Managed Identity (UAMI)
 #        run: |

@@ -1,8 +1,16 @@
 provider "azurerm" {
   features {}
+  alias = "oidc"
   use_oidc = true
   use_cli   = false
 }
+
+provider "azurerm" {
+  alias  = "msi"
+  use_msi = true
+  features {}
+}
+
 
 terraform {
   required_providers {

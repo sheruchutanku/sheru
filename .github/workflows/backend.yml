@@ -53,7 +53,7 @@ jobs:
         run: |
           terraform init \
             -backend-config="resource_group_name=back" \
-            -backend-config="storage_account_name=tt420" \
+            -backend-config="storage_account_name=tt421" \
             -backend-config="container_name=tfstate" \
             -backend-config="key=terraform.tfstate" 
           

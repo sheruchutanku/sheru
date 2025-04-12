@@ -8,7 +8,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./AKS1
+        working-directory: AKS1
     env:
       ARM_USE_MSI: true
       ARM_MSI_CLIENT_ID: ${{ secrets.AZURE_MSI_CLIENT_ID }}

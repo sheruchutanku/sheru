@@ -1,0 +1,21 @@
+name: 080-resusable-workflow-caller
+
+on:
+  push:
+    branches: none # [ main ]
+  pull_request:
+    branches: none # [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  call-workflow-A:
+    uses: ./.github/workflows/080-reusable-workflow-called.yml@main
+    with:
+      username: Houssem
+
+  call-workflow-B:
+    uses: ./.github/workflows/080-reusable-workflow-called.yml@main
+    with:
+      username: Dellai

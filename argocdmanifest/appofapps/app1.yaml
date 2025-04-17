@@ -9,11 +9,11 @@ spec:
   project: default
   source:
     repoURL: https://github.com/sheruchutanku/sheru.git
-    targetRevision: HEAD
-    path: argocdmanifest/argocd-demo/yamls
+    targetRevision: main
+    path: argocdmanifest/app1 
   destination:
     server: https://kubernetes.default.svc
-    namespace: sheru
+    namespace: app1
   syncPolicy:
     syncOptions:
       - CreateNamespace=true

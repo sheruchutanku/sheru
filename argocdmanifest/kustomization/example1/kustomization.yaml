@@ -1,0 +1,14 @@
+
+resources:
+  - deployment.yaml
+
+configMapGenerator:
+  - name: config
+    literals:
+      - ENV=dev1
+      - LOG_LEVEL=debug
+
+images:
+  - name: nginx
+    newName: nginx       # This is the image name only (no tag)
+    newTag: 1.25.3       # This is the version tag you want to use

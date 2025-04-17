@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: my-app
+  name: app2
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -9,11 +9,11 @@ spec:
   project: default
   source:
     repoURL: https://github.com/sheruchutanku/sheru.git
-    targetRevision: HEAD
-    path: argocdmanifest/argocd-demo/yamls
+    targetRevision: main
+    path: argocdmanifest/app2 
   destination:
     server: https://kubernetes.default.svc
-    namespace: sheru
+    namespace: app2
   syncPolicy:
     syncOptions:
       - CreateNamespace=true

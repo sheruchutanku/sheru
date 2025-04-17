@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/sheruchutanku/sheru.git
     targetRevision: HEAD
-    path: argocdmanifest/argocd-demo/yamls
+    path: argocdmanifest/argocd-demo/kustomize-demo
   destination:
     server: https://kubernetes.default.svc
     namespace: sheru

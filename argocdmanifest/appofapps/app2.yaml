@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/sheruchutanku/sheru.git
     targetRevision: main
-    path: argocdmanifest/app2 
+    path: argocdmanifest/app2/manifests 
   destination:
     server: https://kubernetes.default.svc
     namespace: app2

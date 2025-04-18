@@ -1,4 +1,8 @@
 name: Env Precedence Demo
+
+on:
+  workflow_dispatch:  # 👈 This enables manual trigger
+
 env:
   MESSAGE: "🌍 Global message"  # Global-level
 
@@ -10,11 +14,14 @@ jobs:
       MESSAGE: "💼 Job-level message"  # Job-level
 
     steps:
-      - name: Echo Global/Job Message
-        run: echo "Job level takes precedence: $MESSAGE"
-      - name: Override with Step-level
+      - name: Echo Job-level
+        run: echo "Job level: $MESSAGE"
+
+      - name: Step-level override
         env:
           MESSAGE: "⚙️ Step-level message"  # Step-level
-        run: echo "Step level wins: $MESSAGE"
-      - name: Use another step to confirm job-level is still in effect
+        run: echo "Step level: $MESSAGE"
+
+      - name: Back to job-level
         run: echo "Back to job level: $MESSAGE"
+

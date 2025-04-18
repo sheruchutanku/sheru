@@ -22,8 +22,8 @@ env:
   ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
   ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
   ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }} 
-  AKS_RESOURCE_GROUP: aks-102-rg
-  AKS_NAME: aks-102
+  AKS_RESOURCE_GROUP: maa2
+  AKS_NAME: aks2
   ACR_NAME: acrforaks102
 jobs:
   build-and-deploy:

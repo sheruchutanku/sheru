@@ -3,6 +3,7 @@ name: 3-actions-ci-cd-aks-tf-backend
 on:
   push:
     branches: none # [ main ]
+    paths: .github/workflows/aks3.yml
   pull_request:
     branches:  none # [ release ]
   # Allows you to run this workflow manually from the Actions tab

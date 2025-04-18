@@ -50,11 +50,12 @@ jobs:
  
     - name: Terraform Init (Azure Backend)
       id: init
-      run: terraform init
-             -backend-config="resource_group_name=back" \
-             -backend-config="storage_account_name=tt421" \
-             -backend-config="container_name=tfstate" \
-             -backend-config="key=terraform1.tfstate"
+      run: | 
+        terraform init
+          -backend-config="resource_group_name=back" \
+          -backend-config="storage_account_name=tt421" \
+          -backend-config="container_name=tfstate" \
+          -backend-config="key=terraform1.tfstate"
       working-directory: infra1/
  
     - name: Terraform Validate

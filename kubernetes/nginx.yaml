@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mvc-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mvc
+  template:
+    metadata:
+      labels:
+        app: mvc
+    spec:
+      containers:
+      - name: mvc
+        image: __DOCKER_REPOSITORY__/__IMAGE_NAME__:__IMAGE_TAG__  # Replace these placeholders during deployment or using a tool like Kustomize or Helm
+        ports:
+        - containerPort: 80

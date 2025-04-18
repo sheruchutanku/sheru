@@ -1,0 +1,22 @@
+name: Env Precedence Demo
+env:
+  MESSAGE: "🌍 Global message"  # Global-level
+
+jobs:
+  demo-job:
+    runs-on: ubuntu-latest
+
+    env:
+      MESSAGE: "💼 Job-level message"  # Job-level
+
+    steps:
+      - name: Echo Global/Job Message
+        run: echo "Job level takes precedence: $MESSAGE"
+
+      - name: Override with Step-level
+        env:
+          MESSAGE: "⚙️ Step-level message"  # Step-level
+        run: echo "Step level wins: $MESSAGE"
+
+      - name: Use another step to confirm job-level is still in effect
+        run: echo "Back to job level: $MESSAGE"

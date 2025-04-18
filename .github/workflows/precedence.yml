@@ -1,17 +1,17 @@
 name: Env Precedence Demo
 
 on:
-  workflow_dispatch:  # 👈 This enables manual trigger
+  workflow_dispatch:  #  This enables manual trigger
 
 env:
-  MESSAGE: "🌍 Global message"  # Global-level
+  MESSAGE: "Global message"  # Global-level
 
 jobs:
   demo-job:
     runs-on: ubuntu-latest
 
     env:
-      MESSAGE: "💼 Job-level message"  # Job-level
+      MESSAGE: "Job-level message"  # Job-level
 
     steps:
       - name: Echo Job-level
@@ -19,7 +19,7 @@ jobs:
 
       - name: Step-level override
         env:
-          MESSAGE: "⚙️ Step-level message"  # Step-level
+          MESSAGE: "Step-level message"  # Step-level
         run: echo "Step level: $MESSAGE"
 
       - name: Back to job-level

@@ -1,0 +1,52 @@
+name: 'Terraform'
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+#    environment: production
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    - name: Configure aws credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        role-to-assume: arn:aws:iam::049354096238:role/github-role
+        aws-region: ap-south-1
+
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.4.6
+
+    - name: Terraform Init
+      run: terraform init
+      working-directory: infra1/vpc
+
+    - name: Terraform Format
+      run: terraform fmt -check
+      working-directory: infra1/vpc
+
+    - name: Terraform Plan
+      run: terraform plan -input=false
+      working-directory: infra1/vpc
+
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: terraform apply -auto-approve -input=false
+      working-directory: infra1/vpc

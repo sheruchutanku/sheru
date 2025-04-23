@@ -1,4 +1,4 @@
-name: "Terraform action1 "
+name: "Terraform action1"
 on:
   push:
     branches:

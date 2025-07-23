@@ -32,7 +32,11 @@ jobs:
           terraform_version: 1.7.5  # or your preferred version
 
       - name: Terraform Init
-        run: terraform init
-
+        run:
+          terraform init \
+            -backend-config="resource_group_name=back" \
+            -backend-config="storage_account_name=tt421" \
+            -backend-config="container_name=tfstate" \
+            -backend-config="key=terraform1.tfstate"
       - name: Terraform Destroy
         run: terraform destroy -auto-approve

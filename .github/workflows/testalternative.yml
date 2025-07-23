@@ -32,7 +32,12 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: terraform init
+        run: |
+          terraform init \
+            -backend-config="resource_group_name=back" \
+            -backend-config="storage_account_name=tt421" \
+            -backend-config="container_name=tfstate" \
+            -backend-config="key=terraform2.tfstate" 
  
      
       - name: Terraform Validate
@@ -41,7 +46,7 @@ jobs:
        
       - name: Terraform Plan
         id: plan
-        run: terraform plan -out tfplan
+        run: terraform plan -var="subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -out tfplan
         continue-on-error: true
 
       - name: Terraform Plan Status
@@ -49,7 +54,7 @@ jobs:
         run: exit 1
   
       - name: Terraform Apply
-        run: terraform apply -auto-approve
+        run: terraform apply -var="subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -auto-approve
                   
       - name: Terraform Output
         run: terraform output

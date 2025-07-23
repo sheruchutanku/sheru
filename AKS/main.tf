@@ -6,7 +6,7 @@ resource "azurerm_resource_group" "example" {
 
 resource "azurerm_role_definition" "custom_role" {
   name        = "TerraformCustomRole"
-  scope       = "/subscriptions/d184e3f5-97a5-4b27-a0b8-51d1761d16e5"
+  scope       = "/subscriptions/${var.subscription_id}"
   description = "Custom role for Terraform with limited permissions"
   permissions {
     actions = [
@@ -19,7 +19,7 @@ resource "azurerm_role_definition" "custom_role" {
     not_actions = []
   }
   assignable_scopes = [
-    "/subscriptions/d184e3f5-97a5-4b27-a0b8-51d1761d16e5"
+    "/subscriptions/${var.subscription_id}"
   ]
 }
 

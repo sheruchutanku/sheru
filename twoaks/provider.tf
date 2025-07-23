@@ -24,7 +24,7 @@ backend "azurerm" {
 
 provider "azurerm" {
   features {}
-  alias = "oidc"
+#  alias = "oidc"
   use_oidc = true
   use_cli   = false
 }

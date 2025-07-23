@@ -1,15 +1,15 @@
 provider "azurerm" {
   features {}
-  alias = "oidc"
+#  alias = "oidc"
   use_oidc = true
   use_cli   = false
 }
 
-provider "azurerm" {
-  alias  = "msi"
-  use_msi = true
-  features {}
-}
+#provider "azurerm" {
+#  alias  = "msi"
+#  use_msi = true
+#  features {}
+#}
 
 
 terraform {

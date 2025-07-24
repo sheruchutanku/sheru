@@ -1,3 +1,3 @@
 FROM nginx:latest
-RUN echo "harish" > /usr/share/nginx/html/index.html
+RUN echo "harish1" > /usr/share/nginx/html/index.html
 

@@ -1,3 +1,3 @@
-resource_group_name = "maa2"
-cluster_name        = "aks2"
-acr_name            = "acr056"
+resource_group_name = "tutorial"
+cluster_name        = "aks1"
+acr_name            = "acr047"

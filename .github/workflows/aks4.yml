@@ -7,7 +7,7 @@ on:
   pull_request:
     branches:  none # [ release ]
   # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatchi:
+  workflow_dispatch:
 
 permissions:
   id-token: write

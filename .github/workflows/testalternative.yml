@@ -1,4 +1,4 @@
-name: Create Azure INSTALLATION With Terraform1
+name: testalternative
 on:
   workflow_dispatch:
 

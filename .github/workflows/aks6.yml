@@ -23,6 +23,8 @@ env:
   WORKING_DIRECTORY: infra1 
   AKS_NAME: aks1
   ACR_NAME: acr047
+  AZURE_CONFIG_DIR: "/tmp/azconfig"
+  AZURE_CORE_COLLECT_TELEMETRY: "false"
 jobs:
   build-and-deploy:
     name: Build and deploy into AKS

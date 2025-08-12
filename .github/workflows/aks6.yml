@@ -40,6 +40,10 @@ jobs:
         azcliversion: 2.64.0
         inlineScript: |
           az login --service-principal -u ${{ secrets.AZURE_SP_CLIENT_ID }} -p ${{ secrets.AZURE_SP_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+    - name: Fix Azure CLI permissions
+      run: |
+         mkdir -p /home/runner/.azure
+         chmod -R 777 /home/runner/.azure
      
     - uses: hashicorp/setup-terraform@v1
       name: Setup Terraform

@@ -18,7 +18,7 @@ jobs:
       IMAGE_TAG: ${{ github.run_number }} # $GITHUB_RUN_NUMBER
       
       CLUSTER_NAME: aks
-      RESOURSE_GROUP: maa
+      RESOURSE_GROUP: tutorial
     
     steps:
 
@@ -41,7 +41,7 @@ jobs:
       with:
         files: '["kubernetes/*.yaml"]'
         tokenPrefix: __ # optional, default is #{
-        tokenSuffix: __ # optional, default is }#
+        tokenSuffix: __ # optional, default is }# 
       env:
         DOCKER_REPOSITORY: ${{ env.DOCKER_REPOSITORY }}
         IMAGE_NAME: ${{ env.IMAGE_NAME }}

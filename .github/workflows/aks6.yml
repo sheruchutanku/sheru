@@ -59,7 +59,8 @@ jobs:
       env:
         AZURE_CONFIG_DIR: "/tmp/azconfig"        # custom writable location
         AZURE_CORE_COLLECT_TELEMETRY: "false"    # disable telemetry/version check
-      run: | 
+      run: |
+        mkdir -p "$AZURE_CONFIG_DIR" \
         terraform init \
           -backend-config="resource_group_name=back" \
           -backend-config="storage_account_name=tt421" \

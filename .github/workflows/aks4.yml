@@ -3,7 +3,7 @@ name: aks4
 on:
   push:
     branches: none # [ main ]
-    paths: .github/workflows/aks3.yml
+    paths: .github/workflows/aks4.yml
   pull_request:
     branches:  none # [ release ]
   # Allows you to run this workflow manually from the Actions tab
@@ -16,9 +16,9 @@ permissions:
 env:
   LOCATION: eastus2
   INFRA_RESOURCE_GROUP: tutorial
-  TF_STATE_STORAGE_ACCOUNT_NAME: back
+  TF_STATE_STORAGE_ACCOUNT_NAME: tt421
   TF_STATE_CONTAINER_NAME: tfstate
-  TF_STATE_FILE_NAME: tfstate
+  TF_STATE_FILE_NAME: aks4.tfstate
   TF_STATE_ACCESS_KEY: "" # will be set later
   DOCKER_REPOSITORY: harishnarang2018
   IMAGE_NAME: kopal
@@ -62,7 +62,7 @@ jobs:
           -backend-config="resource_group_name=back" \
           -backend-config="storage_account_name=tt421" \
           -backend-config="container_name=tfstate" \
-          -backend-config="key=terraform4.tfstate"
+          -backend-config="key=aks4.tfstate"
       working-directory: infra1
  
     - name: Terraform Validate

@@ -1,0 +1,410 @@
+variable "resourcegroup_name" {
+  type        = string
+  description = "The name of the resource group"
+  default     = "rgp"
+}
+
+variable "location" {
+  type        = string
+  description = "The region for the deployment"
+  default     = "eastus2"
+}
+
+variable "tags" {
+  type        = map(string)
+  description = "Tags used for the deployment"
+  default = {
+    "Environment" = "Lab"
+    "Owner"       = "maagrp"
+  }
+}
+
+variable "vnet_name" {
+  type        = string
+  description = "The name of the vnet"
+  default     = "v-net"
+}
+
+variable "vnet_address_space" {
+  type        = list(any)
+  description = "the address space of the VNet"
+  default     = ["10.13.0.0/16"]
+}
+
+variable "subnets" {
+  type = map(any)
+  default = {
+    subnet_1 = {
+      name             = "subnet_1"
+      address_prefixes = ["10.13.1.0/24"]
+    }
+    subnet_2 = {
+      name             = "subnet_2"
+      address_prefixes = ["10.13.2.0/24"]
+    }
+    subnet_3 = {
+      name             = "subnet_3"
+      address_prefixes = ["10.13.3.0/24"]
+    }
+    # The name must be AzureBastionSubnet
+    bastion_subnet = {
+      name             = "AzureBastionSubnet"
+      address_prefixes = ["10.13.250.0/24"]
+    }
+  }
+}
+
+variable "bastionhost_name" {
+  type        = string
+  description = "The name of the basion host"
+  default     = "bastb"
+}
+
+
+resource "azurerm_resource_group" "vnet_rg" {
+  name     = var.resourcegroup_name
+  location = var.location
+  tags     = var.tags
+}
+
+resource "azurerm_virtual_network" "vnet" {
+  name                = var.vnet_name
+  address_space       = var.vnet_address_space
+  location            = azurerm_resource_group.vnet_rg.location
+  resource_group_name = azurerm_resource_group.vnet_rg.name
+  tags                = var.tags
+}
+
+resource "azurerm_subnet" "subnet" {
+  for_each = var.subnets
+  resource_group_name  = var.resourcegroup_name
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  name                 = each.value["name"]
+  address_prefixes     = each.value["address_prefixes"]
+}
+
+resource "azurerm_public_ip" "bastion_pubip" {
+  name                = "${var.bastionhost_name}PubIP"
+  location            = azurerm_resource_group.vnet_rg.location
+  resource_group_name = azurerm_resource_group.vnet_rg.name
+  allocation_method   = "Static"
+  sku                 = "Standard"
+  tags                = var.tags
+}
+
+resource "azurerm_bastion_host" "bastion" {
+  name                = var.bastionhost_name
+  location            = azurerm_resource_group.vnet_rg.location
+  resource_group_name = azurerm_resource_group.vnet_rg.name
+  tags                = var.tags
+
+  ip_configuration {
+    name                 = "bastion_config"
+    subnet_id            = azurerm_subnet.subnet["bastion_subnet"].id
+    public_ip_address_id = azurerm_public_ip.bastion_pubip.id
+  }
+}
+
+
+/*
+# Create network interface
+resource "azurerm_network_interface" "linux_vm_nic" {
+  name                = "LinuxNIC"
+  location            = azurerm_resource_group.vnet_rg.location
+  resource_group_name = azurerm_resource_group.vnet_rg.name
+
+  ip_configuration {
+    name                          = "linux_nic_config"
+    subnet_id                     = azurerm_subnet.subnet["subnet_1"].id
+    private_ip_address_allocation = "Dynamic"
+#    public_ip_address_id          = azurerm_public_ip.bastion_pubip.id
+  }
+}
+
+resource "azurerm_network_interface" "linux_vm_nic1" {
+  name                = "LinuxNIC1"
+  location            = azurerm_resource_group.vnet_rg.location
+  resource_group_name = azurerm_resource_group.vnet_rg.name
+
+  ip_configuration {
+    name                          = "linux_nic_config2"
+    subnet_id                     = azurerm_subnet.subnet["subnet_2"].id
+    private_ip_address_allocation = "Dynamic"
+#    public_ip_address_id          = azurerm_public_ip.bastion_pubip.id
+  }
+}
+
+*/
+
+resource "azurerm_network_interface" "linux_vm_nic" {
+  count               = 2
+  name                = "nic-${count.index}"
+  location            = azurerm_resource_group.vnet_rg.location
+  resource_group_name = azurerm_resource_group.vnet_rg.name
+
+  ip_configuration {
+    name                          = "nic-ipconfig-${count.index}"
+  #  subnet_id                     = azurerm_subnet.subnet["subnet_2"].id
+     subnet_id = azurerm_subnet.subnet[
+      count.index == 0 ? "subnet_1" : "subnet_2"
+    ].id
+    private_ip_address_allocation = "Dynamic"
+  }
+}
+
+
+
+variable "security_rules" {
+  type = map(object({
+    name                       = string
+    priority                   = number
+    direction                  = string
+    access                     = string
+    protocol                   = string
+    source_port_range          = string
+    destination_port_range     = string
+    source_address_prefix      = string
+    destination_address_prefix = string
+  }))
+  default = {
+    SSH = {
+      name                       = "SSH"
+      priority                   = 1001
+      direction                  = "Inbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "22"
+      source_address_prefix      = "*"
+      destination_address_prefix = "*"
+    },
+    RDP = {
+      name                       = "RDP"
+      priority                   = 1002
+      direction                  = "Inbound"
+      access                     = "Allow"
+      protocol                   = "*"
+      source_port_range          = "*"
+      destination_port_range     = "3389"
+      source_address_prefix      = "*"
+      destination_address_prefix = "*"
+    },
+    web = {
+      name                       = "web"
+      priority                   = 1003
+      direction                  = "Inbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "80"
+      source_address_prefix      = "*"
+      destination_address_prefix = "*"
+    },
+    WinRM = {
+      name                       = "WinRM"
+      priority                   = 1004
+      direction                  = "Inbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "5985-5986"
+      source_address_prefix      = "*"
+      destination_address_prefix = "*"
+    }
+  }
+}
+
+
+resource "azurerm_network_security_group" "demo_vnet_nsg" {
+  name                = "demoNetworkSecurityGroup"
+  location            = azurerm_resource_group.vnet_rg.location
+  resource_group_name = azurerm_resource_group.vnet_rg.name
+
+  dynamic "security_rule" {
+    for_each = var.security_rules
+
+    content {
+      name                       = security_rule.value.name
+      priority                   = security_rule.value.priority
+      direction                  = security_rule.value.direction
+      access                     = security_rule.value.access
+      protocol                   = security_rule.value.protocol
+      source_port_range          = security_rule.value.source_port_range
+      destination_port_range     = security_rule.value.destination_port_range
+      source_address_prefix      = security_rule.value.source_address_prefix
+      destination_address_prefix = security_rule.value.destination_address_prefix
+    }
+  }
+}
+
+/*
+# Connect the security group to the network interface
+resource "azurerm_network_interface_security_group_association" "linux" {
+  network_interface_id      = azurerm_network_interface.linux_vm_nic.id
+  network_security_group_id = azurerm_network_security_group.demo_vnet_nsg.id
+}
+
+
+resource "azurerm_network_interface_security_group_association" "linux1" {
+  network_interface_id      = azurerm_network_interface.linux_vm_nic1.id
+  network_security_group_id = azurerm_network_security_group.demo_vnet_nsg.id
+}
+*/
+
+
+resource "azurerm_network_interface_security_group_association" "linux" {
+  count = 2
+  network_interface_id      = azurerm_network_interface.linux_vm_nic[count.index].id
+  network_security_group_id = azurerm_network_security_group.demo_vnet_nsg.id
+}
+
+
+/*
+# Create virtual machine
+resource "azurerm_linux_virtual_machine" "demo_terraform_vm" {
+#  count                 = 2
+  name                  = "demoVM"
+  location              = azurerm_resource_group.vnet_rg.location
+  resource_group_name   = azurerm_resource_group.vnet_rg.name
+  network_interface_ids = [azurerm_network_interface.linux_vm_nic.id]
+  size                  = "Standard_DS1_v2"
+
+  os_disk {
+    name                 = "demo_OsDisk"
+    caching              = "ReadWrite"
+    storage_account_type = "Premium_LRS"
+  }
+
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "18.04-LTS"
+    version   = "latest"
+  }
+
+  computer_name                   = "ubuntuvm"
+  admin_username                  = "azureuser"
+  admin_password                  = "demouser@123"
+  disable_password_authentication = false
+}
+
+# Create virtual machine
+resource "azurerm_linux_virtual_machine" "demo_terraform_vm1" {
+#  count                 = 2
+  name                  = "demoVM1"
+  location              = azurerm_resource_group.vnet_rg.location
+  resource_group_name   = azurerm_resource_group.vnet_rg.name
+  network_interface_ids = [azurerm_network_interface.linux_vm_nic1.id]
+  size                  = "Standard_DS1_v2"
+
+  os_disk {
+    name                 = "demo_OsDisk1"
+    caching              = "ReadWrite"
+    storage_account_type = "Premium_LRS"
+  }
+
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "18.04-LTS"
+    version   = "latest"
+  }
+
+  computer_name                   = "ubuntuvm1"
+  admin_username                  = "azureuser1"
+  admin_password                  = "demouser@1234"
+  disable_password_authentication = false
+}
+*/
+
+# Create virtual machine
+resource "azurerm_linux_virtual_machine" "demo_terraform_vm" {
+  count                 = 2
+  name                  = "demoVM1-${count.index}"
+  location              = azurerm_resource_group.vnet_rg.location
+  resource_group_name   = azurerm_resource_group.vnet_rg.name
+  network_interface_ids = [azurerm_network_interface.linux_vm_nic[count.index].id]
+  size                  = "Standard_B1s"
+
+  os_disk {
+    name                 = "demo_OsDisk1-${count.index}"
+    caching              = "ReadWrite"
+    storage_account_type = "Premium_LRS"
+  }
+
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "18.04-LTS"
+    version   = "latest"
+  }
+
+  computer_name                   = "ubuntuvm1"
+  admin_username                  = "azureuser1"
+  admin_password                  = "demouser@1234"
+  disable_password_authentication = false
+}
+
+resource "azurerm_storage_account" "storage" {
+  name                     = "maa430"
+  resource_group_name      = azurerm_resource_group.vnet_rg.name
+  location                 = azurerm_resource_group.vnet_rg.location
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+#  allow_blob_public_access = false
+  account_kind             = "StorageV2"
+/*
+  blob_properties {
+    delete_retention_policy {
+      days = 7
+    }
+  }
+
+  network_rules {
+    default_action             = "Deny"
+    bypass                     = ["AzureServices"]
+    virtual_network_subnet_ids = [azurerm_subnet.subnet.id]
+  }
+*/
+
+}
+
+resource "azurerm_storage_container" "container" {
+  name                  = "privatecontainer430"
+  storage_account_name  = azurerm_storage_account.storage.name
+  container_access_type = "private"
+}
+
+resource "azurerm_private_endpoint" "pe" {
+  name                = "pe-storage-blob"
+  location            = azurerm_resource_group.vnet_rg.location
+  resource_group_name = azurerm_resource_group.vnet_rg.name
+  subnet_id           = azurerm_subnet.subnet["subnet_1"].id
+
+  private_service_connection {
+    name                           = "blob-privatesc"
+    is_manual_connection           = false
+    private_connection_resource_id = azurerm_storage_account.storage.id
+    subresource_names              = ["blob"]
+  }
+}
+
+resource "azurerm_private_dns_zone" "blob_dns" {
+  name                = "privatelink.blob.core.windows.net"
+  resource_group_name = azurerm_resource_group.vnet_rg.name
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "vnet_link" {
+  name                  = "vnet-dns-link"
+  resource_group_name   = azurerm_resource_group.vnet_rg.name
+  private_dns_zone_name = azurerm_private_dns_zone.blob_dns.name
+  virtual_network_id    = azurerm_virtual_network.vnet.id
+}
+
+resource "azurerm_private_dns_a_record" "blob_record" {
+  name                = azurerm_storage_account.storage.name
+  zone_name           = azurerm_private_dns_zone.blob_dns.name
+  resource_group_name = azurerm_resource_group.vnet_rg.name
+  ttl                 = 300
+  records             = [azurerm_private_endpoint.pe.private_service_connection[0].private_ip_address]
+}

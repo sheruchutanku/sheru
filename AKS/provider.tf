@@ -1,8 +1,8 @@
 provider "azurerm" {
   features {}
 #  alias = "oidc"
-  use_oidc = true
-  use_cli   = false
+#  use_oidc = true
+#  use_cli   = false
 }
 
 #provider "azurerm" {

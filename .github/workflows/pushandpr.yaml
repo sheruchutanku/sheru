@@ -73,7 +73,7 @@ jobs:
         \`\`\`
         ${process.env.PLAN}
         \`\`\`
-       </details>
+        </details>
 
        *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`,
        Workflow: \`${{ github.workflow }}\`*`;

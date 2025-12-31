@@ -33,7 +33,7 @@ jobs:
       - name: Terraform Init
         run: | 
           terraform init -input=false \
-            -backend-config="karantest2026" \
+            -backend-config="bucket=karantest2026" \
             -backend-config="key=eks/github-actions/terraform.tfstate" \
             -backend-config="region=us-east-1"
 

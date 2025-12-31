@@ -48,7 +48,7 @@ jobs:
       - name: Terraform Plan
         run: terraform plan -out=tfplan
 		
-	  - name: Upload Terraform Plan
+      - name: upload plan
         uses: actions/upload-artifact@v4
         with:
           name: tfplan
@@ -83,16 +83,10 @@ jobs:
             -backend-config="key=eks/github-actions/terraform.tfstate" \
             -backend-config="region=us-east-1"
 
-      - name: Terraform Validate
-        run: terraform validate
-
-      - name: Terraform Plan
-        run: terraform plan -out=tfplan
-
       - name: Download Terraform Plan
         uses: actions/download-artifact@v4
         with:
           name: tfplan
-
+		  
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan

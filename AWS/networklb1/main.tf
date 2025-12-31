@@ -115,17 +115,8 @@ resource "aws_instance" "kopal" {
    vpc_security_group_ids = [ "${aws_security_group.allow_ssh.id}" ]
   subnet_id                   = aws_subnet.harishsubnet.id
   associate_public_ip_address = true
-/*  user_data                   = <<-EOF
-            #!/bin/bash
-              sudo apt-get -y update
-#             sudo apt-get -y remove nginx
-              sudo apt-get -y install apache2
-              echo "harish" > /var/www/html/index.html
-              mkdir -p /var/www/html/maa
-              echo "maa" > /var/www/html/maa/index.html
-              EOF
-*/
- user_data = <<-EOF
+
+  user_data = <<-EOF
               #!/bin/bash
               apt-get update -y
               apt-get install -y apache2
@@ -148,16 +139,7 @@ resource "aws_instance" "kopal1" {
    vpc_security_group_ids = [ "${aws_security_group.allow_ssh.id}" ]
   subnet_id                   = aws_subnet.harishsubnet1.id
   associate_public_ip_address = true
-/*  user_data                   = <<-EOF
-              #!/bin/bash
-              sudo apt-get -y update
-#             sudo apt-get -y remove nginx
-              sudo apt-get -y install apache2
-              echo "harish1" > /var/www/html/index.html
-              mkdir -p /var/www/html/maa
-              echo "maa" > /var/www/html/maa/index.html
-              EOF
-*/
+
   user_data = <<-EOF
               #!/bin/bash
               apt-get update -y
@@ -175,7 +157,7 @@ EOF
 
 
 ####################################################################################################
-/*
+
 resource "aws_alb" "alb_front" {
   name     = "front-alb"
   internal = false
@@ -282,7 +264,6 @@ resource "aws_lb_listener_rule" "papa" {
 }
 
 
-*/
 
 
 # Create NLB

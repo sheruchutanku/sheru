@@ -1,4 +1,4 @@
-root@linux-vm:~/TErr/github# cat network1.tf
+
 provider "aws" {
   region = "us-east-1"
 

@@ -11,6 +11,9 @@ permissions:
 jobs:
   destroy:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: AWS/networklb1
 
     steps:
       - uses: actions/checkout@v4

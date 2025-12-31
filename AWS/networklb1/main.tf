@@ -3,6 +3,10 @@ provider "aws" {
 
 }
 
+terraform {
+  backend "s3" {}
+}
+
 
 resource "aws_vpc" "harishvpc" {
   cidr_block           = "192.168.0.0/16"
@@ -99,7 +103,7 @@ resource "aws_security_group" "allow_ssh" {
     Name = "allow-all-ssh"
   }
 }
-
+/*
 ####################################################################################################
 
 
@@ -324,3 +328,4 @@ resource "aws_lb_listener" "listener" {
     target_group_arn = aws_lb_target_group.tg.arn
   }
 }
+*/

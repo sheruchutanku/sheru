@@ -87,6 +87,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: tfplan
-		  
+
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan

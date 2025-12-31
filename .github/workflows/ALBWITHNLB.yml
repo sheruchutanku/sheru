@@ -1,4 +1,4 @@
-name: Terraform NW Deploy
+name: Terraform ALBNLB Deploy
 
 on:
   workflow_dispatch:

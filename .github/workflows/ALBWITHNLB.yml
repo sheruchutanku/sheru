@@ -13,7 +13,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: AWS/networklb1  #
+        working-directory: AWS/albwithnlb  #
 
     steps:
       - name: Checkout repo

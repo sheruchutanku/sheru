@@ -90,6 +90,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: tfplan
+          path: AWS/networklb1
 
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan

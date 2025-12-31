@@ -41,7 +41,7 @@ jobs:
       - name: Terraform Init
         run: | 
           terraform init -input=false \
-            -backend-config="bucket=karantest2026" \
+            -backend-config="bucket=maasheru" \
             -backend-config="key=eks/github-actions/terraform.tfstate" \
             -backend-config="region=us-east-1"
 
@@ -82,7 +82,7 @@ jobs:
       - name: Terraform Init
         run: | 
           terraform init -input=false \
-            -backend-config="bucket=karantest2026" \
+            -backend-config="bucket=maasheru" \
             -backend-config="key=eks/github-actions/terraform.tfstate" \
             -backend-config="region=us-east-1"
 

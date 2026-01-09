@@ -15,10 +15,10 @@ defaults:
     working-directory: AWS/networklb1  
 jobs:
   deploy:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
+#    runs-on: ubuntu-latest
+#    defaults:
+#      run:
+#        shell: bash
     steps:
       - name: Git checkout
         uses: actions/checkout@v3

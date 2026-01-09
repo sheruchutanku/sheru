@@ -15,7 +15,7 @@ defaults:
     working-directory: AWS/networklb1  
 jobs:
   deploy:
-#    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
 #    defaults:
 #      run:
 #        shell: bash
